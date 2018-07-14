@@ -1,4 +1,13 @@
-import { all, select, put, call, takeLatest } from 'redux-saga/effects';
+import {
+  all,
+  select,
+  put,
+  call,
+  takeLatest,
+  takeEvery,
+  take,
+  fork
+} from 'redux-saga/effects';
 import {
   loadUser,
   loadDeparture,
@@ -31,8 +40,8 @@ const fetchFlight = function*() {
   }
 };
 
-const fetchUser = function*() {
-  console.log('fecthUserSaga');
+function* fetchUser() {
+  console.log('xxxxfecthUserSaga');
   try {
     const user = yield call(loadUser);
 
@@ -43,13 +52,22 @@ const fetchUser = function*() {
   } catch (error) {
     yield put({ type: 'FLETCH_USER_FAILURE', error: error.message });
   }
-};
+}
 
-export default function* rootSaga() {
+function* watchIncrementAsync() {
+  console.log('xxx');
+  yield takeEvery('FETCH_USER', fetchUser);
+}
+
+function* watchLog() {
+  while (true) {
+    const action = yield take('*');
+    console.log('action::', action);
+  }
+}
+
+export function* rootSaga() {
   console.log('rootsaga');
-  yield all([
-    helloSaga(),
-    takeLatest('FETCH_USER', fetchUser),
-    takeLatest('FETCH_FLIGHT', fetchFlight)
-  ]);
+  yield takeEvery('FETCH_USER', fetchUser);
+  yield fork(watchLog);
 }

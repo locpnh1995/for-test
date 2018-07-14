@@ -3,10 +3,12 @@ import { connect } from 'react-redux';
 
 import fletchFlight from '../../actions/FlightAction';
 import fetchUser from '../../actions/UserAction';
+import { test } from '../../actions/UserAction';
 
 class FlightItem extends Component {
   componentDidMount() {
     this.props.fetchUser();
+    this.props.test();
   }
   render() {
     return (
@@ -32,8 +34,23 @@ const mapStateToProps = state => ({
   departure: state.departure
 });
 
-const mapDispatchToProps = () => ({ fetchUser, fletchFlight });
+const mapDispatchToProps = () => ({
+  fetchUser,
+  fletchFlight
+});
+
+function mapDispatchToProps2() {
+  return {
+    fetchUser,
+    fletchFlight,
+    test
+  };
+}
+
+console.log(typeof mapDispatchToProps);
+console.log(typeof { fetchUser, fletchFlight });
+
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps2
 )(FlightItem);
